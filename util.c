@@ -1,27 +1,24 @@
 
-// RemoteLoadLibrary just gets the remote library address
+
 
 #define MAX_PATH 260
 #include "util.h"
-char tolower(char ch){
-	if (ch >= 'A' && ch <= 'Z')
-		return ch + 'a' - 'A';
-	return ch;
-}
+#include <tlhelp32.h>
+
 BOOL strcmpend(const char* str1, const char* str2){
 	if (str1 == NULL || str2 == NULL)
-		return false;
+		return FALSE;
 	char* end_str1 = str1;
 	while (end_str1 != '\0'){
 		end_str1++;
 	}
-	if (end_str1 == str1) return false;
+	if (end_str1 == str1) return FALSE;
 	
 	char* end_str2 = str2;
 	while (end_str2 != '\0'){
 		end_str2++;
 	}
-	if (end_str2 == str2) return false;
+	if (end_str2 == str2) return FALSE;
 	
 	while ((end_str1 != str1) && (end_str2 != str2)){
 		if (tolower(*end_str1) != tolower(*end_str2))
