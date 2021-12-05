@@ -61,6 +61,12 @@ BOOL SetHook(PHookData data, PBYTE shellcode, SIZE_T shellcodeSize){
 			MEM_RELEASE);	
 		return FALSE;
 	}
+	VirtualProtectEx(
+		hProcess,
+		remoteBuffer,
+		shellcodeSize,
+		PAGE_EXECUTE,
+		&oldProtect);
 	// Do I need little endian magic? 
 	BYTE hook[5] = { 0XE8, remoteBuffer & 0xff, (remoteBuffer >> 8) & 0xff,
 	(remoteBuffer >> 16) & 0xff, remoteBuffer >> 24 };
