@@ -20,6 +20,7 @@ BOOL SetHook(PHookData data, PBYTE shellcode, SIZE_T shellcodeSize){
 	BOOL result;
 	SIZE_T read;
 	SIZE_T written;
+	DWORD oldProtect;
 	PBYTE restore = HeapAlloc(
 		GetProcessHeap(),
 		0,
@@ -40,7 +41,7 @@ BOOL SetHook(PHookData data, PBYTE shellcode, SIZE_T shellcodeSize){
 		shellcodeSize,
 		MEM_RESERVE | MEM_COMMIT,
 		PAGE_EXECUTE_READWRITE);
-		
+	
 	if (remoteBuffer == NULL)
 		return FALSE;
 	
@@ -67,10 +68,9 @@ BOOL SetHook(PHookData data, PBYTE shellcode, SIZE_T shellcodeSize){
 		shellcodeSize,
 		PAGE_EXECUTE,
 		&oldProtect);
-	// Do I need little endian magic? 
-	BYTE hook[5] = { 0XE8, remoteBuffer & 0xff, (remoteBuffer >> 8) & 0xff,
-	(remoteBuffer >> 16) & 0xff, remoteBuffer >> 24 };
-	// make it compatible with longer hook by using the hook size instead of just 5
+
+	BYTE hook[5] = { 0XE8, (DWORD)remoteBuffer & 0xff, ((DWORD)remoteBuffer >> 8) & 0xff,
+	((DWORD)remoteBuffer >> 16) & 0xff, (DWORD)remoteBuffer >> 24 };
 	
 	result = WriteProcessMemory(
 		hProcess,
@@ -106,7 +106,7 @@ BOOL ResetHook(PHookData data){
 	SIZE_T written;
 	result = WriteProcessMemory(
 		hProcess,
-		ProcAddress,
+		data->ProcAddress,
 		data->restore,
 		5,
 		&written);
