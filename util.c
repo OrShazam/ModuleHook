@@ -9,13 +9,13 @@ BOOL strcmpend(const char* str1, const char* str2){
 	if (str1 == NULL || str2 == NULL)
 		return FALSE;
 	char* end_str1 = str1;
-	while (end_str1 != '\0'){
+	while (*end_str1 != '\0'){
 		end_str1++;
 	}
 	if (end_str1 == str1) return FALSE;
 	
 	char* end_str2 = str2;
-	while (end_str2 != '\0'){
+	while (*end_str2 != '\0'){
 		end_str2++;
 	}
 	if (end_str2 == str2) return FALSE;
