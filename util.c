@@ -60,6 +60,7 @@ LPVOID RemoteProcAddress(DWORD ProcessId, const char* moduleName, const char* pr
 	// a module handle is it's base address
 	//count for the differences in the bases
 	procPtr = procPtr - (me.hModule - hModule);
+	CloseHandle(hSnapshot);
 	return procPtr;
 }
 
