@@ -42,8 +42,10 @@ BOOL SetHook(PHookData data, PBYTE shellcode, SIZE_T shellcodeSize){
 		MEM_RESERVE | MEM_COMMIT,
 		PAGE_EXECUTE_READWRITE);
 	
-	if (remoteBuffer == NULL)
+	if (remoteBuffer == NULL){
+		CloseHandle(hProcess);
 		return FALSE;
+	}
 	
 	data->remoteBuffer = remoteBuffer; // for resetting the hook
 	
@@ -59,7 +61,8 @@ BOOL SetHook(PHookData data, PBYTE shellcode, SIZE_T shellcodeSize){
 			hProcess,
 			remoteBuffer,
 			0,
-			MEM_RELEASE);	
+			MEM_RELEASE);
+		CloseHandle(hProcess);
 		return FALSE;
 	}
 	VirtualProtectEx(
@@ -92,8 +95,10 @@ BOOL SetHook(PHookData data, PBYTE shellcode, SIZE_T shellcodeSize){
 			remoteBuffer,
 			0,
 			MEM_RELEASE);	
+		CloseHandle(hProcess);
 		return FALSE;
 	}
+	CloseHandle(hProcess);
 	return TRUE;
 }
 BOOL ResetHook(PHookData data){
@@ -119,8 +124,10 @@ BOOL ResetHook(PHookData data){
 		5,
 		&written);
 	if (!result || !written){
+		CloseHandle(hProcess);
 		return FALSE;
 	}
+	CloseHandle(hProcess);
 	return TRUE;
 	
 	
