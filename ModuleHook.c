@@ -99,6 +99,12 @@ BOOL SetHook(PHookData data, PBYTE shellcode, SIZE_T shellcodeSize){
 		CloseHandle(hProcess);
 		return FALSE;
 	}
+	VirtualProtectEx(
+		hProcess,
+		data->ProcAddress,
+		5,
+		oldProtect,
+		&oldProtect);
 	CloseHandle(hProcess);
 	return TRUE;
 }
@@ -118,6 +124,13 @@ BOOL ResetHook(PHookData data){
 
 	BOOL result;
 	SIZE_T written;
+	DWORD oldProtect;
+	VirtualProtectEx(
+		hProcess,
+		data->ProcAddress,
+		5,
+		PAGE_EXECUTE_READ_WRITE,
+		&oldProtect);
 	result = WriteProcessMemory(
 		hProcess,
 		data->ProcAddress,
@@ -128,6 +141,12 @@ BOOL ResetHook(PHookData data){
 		CloseHandle(hProcess);
 		return FALSE;
 	}
+	VirtualProtectEx(
+		hProcess,
+		data->ProcAddress,
+		5,
+		oldProtect,
+		&oldProtect);
 	CloseHandle(hProcess);
 	return TRUE;
 	
