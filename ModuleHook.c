@@ -72,8 +72,9 @@ BOOL SetHook(PHookData data, PBYTE shellcode, SIZE_T shellcodeSize){
 		PAGE_EXECUTE,
 		&oldProtect);
 
-	BYTE hook[5] = { 0XE8, (DWORD)remoteBuffer & 0xff, ((DWORD)remoteBuffer >> 8) & 0xff,
-	((DWORD)remoteBuffer >> 16) & 0xff, (DWORD)remoteBuffer >> 24 };
+	BYTE hook[5];
+	hook[0] = 0xE8;
+	*(unsigned int*)&hook[1] = (unsigned int)remoteBuffer;
 	// make sure start of function is writable
 	VirtualProtectEx(
 		hProcess,
