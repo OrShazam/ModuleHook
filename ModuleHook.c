@@ -12,7 +12,7 @@ BOOL InitHookData(PHookData data,const char* moduleName, const char* procName,DW
 }
 BOOL SetHook(PHookData data, PBYTE shellcode, SIZE_T shellcodeSize){
 	HANDLE hProcess = OpenProcess(
-		PROCESS_ALL_ACCESS, // Stealth level: -infinity
+		PROCESS_ALL_ACCESS, // Stealth level: -infinity (don't forget to adjust token before trying)
 		FALSE,
 		data->ProcessId);
 	if (hProcess == NULL)
